@@ -27,4 +27,17 @@ namespace Core
   bool JsonValue::isArray() const { return std::holds_alternative<JsonArray>(m_data); }
 
   bool JsonValue::isObject() const { return std::holds_alternative<JsonObject>(m_data); }
+
+  //object checkers
+   std::expected<bool, Core::JsonError> JsonValue::has(const std::string &key) const
+    {
+        return asObject()
+            .and_then([key](const Core::JsonObject object) {
+                return std::expected<bool, Core::JsonError>(object.contains(key));
+            })
+            .or_else(
+                [](const Core::JsonError &err) { return std::expected<bool, Core::JsonError>{std::unexpected(err)}; });
+    };
+
+  //array checkers
 }

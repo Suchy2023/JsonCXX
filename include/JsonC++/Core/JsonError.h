@@ -1,4 +1,4 @@
-
+#pragma once
 
 namespace Core {
 enum class JsonError : unsigned char {
