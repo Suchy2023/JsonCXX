@@ -125,8 +125,7 @@ public:
     requires TKeyString<TKey, TValue>
   std::expected<bool, Core::JsonError> emplace(TKey &&key, TValue &&value) {
 
-    if (!isObject())
-    {
+    if (!isObject()) {
       m_data = JsonObject{};
     }
 
@@ -139,12 +138,13 @@ public:
         });
   };
 
-  std::expected<JsonValue, Core::JsonError> 
-  get(const std::string &key) const {
-    return asObject().and_then([]() {
-
-
-
+  std::expected<JsonValue, Core::JsonError> get(const std::string &key) const {
+    return asObject().and_then([&](const JsonObject &json)->std::expected<JsonValue, JsonError> {
+      if (has(key)) {
+        return json.at(key);
+      } else {
+        return std::unexpected(Core::JsonError::key_not_found);
+      }
     });
   };
 
@@ -174,6 +174,6 @@ public:
   };
 
 private:
-   JsonVariant m_data{JsonNull{}};
+  JsonVariant m_data{JsonNull{}};
 };
 } // namespace Core
