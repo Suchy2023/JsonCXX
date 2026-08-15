@@ -18,7 +18,7 @@ target_link_libraries(
 target_include_directories(
     CoreTests
     PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/include/JsonC++
 )
 
 include(GoogleTest)
