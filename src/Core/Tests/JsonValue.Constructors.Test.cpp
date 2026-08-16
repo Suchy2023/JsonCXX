@@ -60,3 +60,12 @@ TEST(JsonValue_Constructors_Test, constructible_from_JsonObject)
     EXPECT_TRUE(json1.isObject());
 }
 
+TEST(JsonValue_Constructors_Test, constructible_from_JsonArray)
+{
+    const Core::JsonArray jsonArray = {{"key", 1}};
+
+    const auto json1 = Core::JsonValue{jsonArray};
+
+    EXPECT_TRUE(json1.isArray());
+}
+
