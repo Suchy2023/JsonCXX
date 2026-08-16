@@ -4,6 +4,7 @@ add_executable(
     JsonValue_Test.cpp
     JsonValue.Accessors.Test.cpp
     JsonValue.Constructors.Test.cpp
+    JsonValue.Comparers.Test.cpp
 )
 
 find_package(GTest CONFIG REQUIRED)
