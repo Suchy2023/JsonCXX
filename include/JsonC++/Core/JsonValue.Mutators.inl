@@ -1,15 +1,16 @@
+#pragma once
 
+#include "JsonValue.h"
 
 #include "Core/JsonValue.Concepts.h"
 #include "Core/JsonValue.Types.h"
 #include "JsonError.h"
-#include "JsonValue.h"
 #include <expected>
 
 namespace Core
 {
 // object mutators
-template <Stringlike TKey, JsonValuelike TValue>
+template <Stringlike TKey, ConvertibleToJson TValue>
 std::expected<bool, Core::JsonError> JsonValue::emplace(TKey &&key, TValue &&value)
 {
     if (!isObject())

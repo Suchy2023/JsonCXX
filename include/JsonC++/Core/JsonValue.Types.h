@@ -7,7 +7,7 @@
 
 namespace Core {
 
-class JsonValue;
+    class JsonValue;
 
 typedef std::monostate JsonNull;
 typedef int JsonInt;

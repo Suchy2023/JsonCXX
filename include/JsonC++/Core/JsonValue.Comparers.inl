@@ -1,16 +1,33 @@
 
-#include "Core/JsonValue.Concepts.h"
-#include "Core/JsonValue.Types.h"
+#pragma once
+
 #include "JsonValue.h"
-#include <expected>
+
+#include "JsonValue.Concepts.h"
+#include <type_traits>
 
 namespace Core
 {
-template <JsonValuelike T> bool JsonValue::strictlyEquals(T &&json) const
+
+template <JsonValueLike T> bool JsonValue::strictlyEquals(T &&json) const
 {
-    if (json.template is<int>() && this->is<int>())
+    if constexpr (std::is_same_v<std::remove_cvref_t<T>, JsonValue>)
     {
-        return json.template as<int>().value() == this->as<int>().value();
+        return m_data == json.m_data;
+    }
+    else
+    {
     }
 };
+
+template <JsonValueLike T> bool JsonValue::operator==(T&& other) const
+{
+
+    if constexpr (std::is_same_v<std::remove_cvref_t<T>, Core::JsonValue>) {
+        return this == &other;
+    }
+
+    
+
+}
 } // namespace Core

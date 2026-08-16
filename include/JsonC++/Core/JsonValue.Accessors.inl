@@ -1,4 +1,7 @@
 
+#pragma once
+
+#include "JsonValue.h"
 
 #include <expected>
 #include <functional>
@@ -32,7 +35,7 @@ template <JsonFundamentalType T> std::expected<std::reference_wrapper<const T>, 
     }
 }
 
-std::expected<std::reference_wrapper<JsonArray>, JsonError> JsonValue::asArray()
+inline std::expected<std::reference_wrapper<JsonArray>, JsonError> JsonValue::asArray()
 {
     if (isArray())
     {
@@ -44,7 +47,7 @@ std::expected<std::reference_wrapper<JsonArray>, JsonError> JsonValue::asArray()
     }
 };
 
-std::expected<std::reference_wrapper<const JsonArray>, JsonError> JsonValue::asArray() const
+inline std::expected<std::reference_wrapper<const JsonArray>, JsonError> JsonValue::asArray() const
 {
     if (isArray())
     {
@@ -56,7 +59,7 @@ std::expected<std::reference_wrapper<const JsonArray>, JsonError> JsonValue::asA
     }
 };
 
-std::expected<std::reference_wrapper<const JsonObject>, JsonError> JsonValue::asObject() const
+inline std::expected<std::reference_wrapper<const JsonObject>, JsonError> JsonValue::asObject() const
 {
     if (isObject())
     {
@@ -68,7 +71,7 @@ std::expected<std::reference_wrapper<const JsonObject>, JsonError> JsonValue::as
     }
 };
 
-std::expected<std::reference_wrapper<JsonObject>, JsonError> JsonValue::asObject()
+inline std::expected<std::reference_wrapper<JsonObject>, JsonError> JsonValue::asObject()
 {
     if (isObject())
     {
@@ -80,7 +83,7 @@ std::expected<std::reference_wrapper<JsonObject>, JsonError> JsonValue::asObject
     }
 };
 
-std::expected<std::reference_wrapper<JsonNull>, JsonError> JsonValue::asNull()
+inline std::expected<std::reference_wrapper<JsonNull>, JsonError> JsonValue::asNull()
 {
     if (isNull())
     {
@@ -92,7 +95,7 @@ std::expected<std::reference_wrapper<JsonNull>, JsonError> JsonValue::asNull()
     }
 };
 
-std::expected<std::reference_wrapper<const JsonNull>, JsonError> JsonValue::asNull() const
+inline std::expected<std::reference_wrapper<const JsonNull>, JsonError> JsonValue::asNull() const
 {
     if (isNull())
     {
@@ -104,7 +107,7 @@ std::expected<std::reference_wrapper<const JsonNull>, JsonError> JsonValue::asNu
     }
 };
 
-std::expected<JsonValue, Core::JsonError> JsonValue::get(const std::string &key) const
+inline std::expected<JsonValue, Core::JsonError> JsonValue::get(const std::string &key) const
 {
     return asObject().and_then([&](const JsonObject &json) -> std::expected<JsonValue, JsonError> {
         if (has(key))

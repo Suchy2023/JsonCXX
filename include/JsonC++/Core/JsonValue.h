@@ -1,6 +1,7 @@
+#pragma once
 
-#include "Core/JsonValue.Concepts.h"
 #include "JsonError.h"
+#include "JsonValue.Concepts.h"
 #include "JsonValue.Types.h"
 #include <expected>
 #include <functional>
@@ -13,6 +14,15 @@ class JsonValue
 {
 
   public:
+    /**
+    Ctors
+     **/
+
+    template <JsonValueLike T, typename X = disable_if_same_or_derived<JsonValue, T>>
+    JsonValue(T &&value);
+
+    explicit JsonValue();
+
     /**
     Checkers
      **/
@@ -33,8 +43,8 @@ class JsonValue
     std::expected<std::reference_wrapper<JsonNull>, JsonError> asNull();
     std::expected<std::reference_wrapper<const JsonNull>, JsonError> asNull() const;
 
-    //object mutators
-    template <Stringlike TKey, JsonValuelike TValue>
+    // object mutators
+    template <Stringlike TKey, ConvertibleToJson TValue>
     std::expected<bool, Core::JsonError> emplace(TKey &&key, TValue &&value);
 
     std::expected<JsonValue, Core::JsonError> get(const std::string &key) const;
@@ -50,9 +60,18 @@ class JsonValue
     // checks if object has key
     std::expected<bool, Core::JsonError> has(const std::string &key) const;
 
-    template <JsonValuelike T> bool strictlyEquals(T &&json) const;
+    // Comparers
+    template <JsonValueLike T>
+    bool strictlyEquals(T &&json) const;
+
+    template <JsonValueLike T> bool operator==(T &&other) const;
 
   private:
     JsonVariant m_data{JsonNull{}};
 };
 } // namespace Core
+#include "JsonValue.Accessors.inl"
+#include "JsonValue.Checkers.inl"
+#include "JsonValue.Comparers.inl"
+#include "JsonValue.Contructors.inl"
+#include "JsonValue.Mutators.inl"

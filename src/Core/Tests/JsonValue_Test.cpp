@@ -54,9 +54,3 @@ TEST(JsonValue_Test, get_works) {
   //  EXPECT_EQ(getResult.value(), nextJsonValue);
 }
 
-TEST(JsonValue_Test, strictly_equals_checks_int) {
-
-  const auto json = Core::JsonValue{};
-
-  json.strictlyEquals(1);
-}

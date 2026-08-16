@@ -2,6 +2,8 @@
 add_executable(
     CoreTests
     JsonValue_Test.cpp
+    JsonValue.Accessors.Test.cpp
+    JsonValue.Constructors.Test.cpp
 )
 
 find_package(GTest CONFIG REQUIRED)
