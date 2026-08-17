@@ -26,7 +26,7 @@ class JsonValue
     /**
     Checkers
      **/
-    template <typename T> bool is() const;
+    template <JsonFundamentalType T> bool is() const;
     bool isNull() const;
     bool isArray() const;
     bool isObject() const;

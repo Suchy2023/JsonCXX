@@ -1,50 +1,31 @@
 #pragma once
 
+#include "Core/JsonValue.Concepts.h"
 #include "JsonValue.h"
-#include <type_traits>
 #include <variant>
 
 #include "Core/JsonValue.Types.h"
 
 namespace Core
 {
-template <typename T> bool JsonValue::is() const
+template <JsonFundamentalType T> bool JsonValue::is() const
 {
-    if constexpr (std::is_same_v<T, JsonNull>)
-    {
-        return std::holds_alternative<JsonNull>(m_data);
-    }
-    else if constexpr (std::is_same_v<T, JsonInt>)
-    {
-        return std::holds_alternative<JsonInt>(m_data);
-    }
-    else if constexpr (std::is_same_v<T, JsonDouble>)
-    {
-        return std::holds_alternative<JsonDouble>(m_data);
-    }
-    else if constexpr (std::is_same_v<T, JsonString>)
-    {
-        return std::holds_alternative<JsonString>(m_data);
-    }
-    else
-    {
-        static_assert(!std::is_same_v<T, T>, "Unsupported type");
-    }
+    return std::holds_alternative<T>(m_data);
 }
 
 inline bool JsonValue::isNull() const
 {
-    return std::holds_alternative<JsonNull>(m_data);
+    return is<JsonNull>();
 }
 
 inline bool JsonValue::isArray() const
 {
-    return std::holds_alternative<JsonArray>(m_data);
+    return is<JsonArray>();
 }
 
 inline bool JsonValue::isObject() const
 {
-    return std::holds_alternative<JsonObject>(m_data);
+    return is<JsonObject>();
 }
 
 // object checkers

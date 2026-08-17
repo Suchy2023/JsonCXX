@@ -1,19 +1,21 @@
 
 #pragma once
 
+#include "Core/JsonValue.Types.h"
 #include "JsonValue.h"
 
 #include <expected>
 #include <functional>
+#include <variant>
 
 #include "Core/JsonValue.Checkers.inl"
 #include "Core/JsonValue.Concepts.h"
 namespace Core
 {
 
-template <JsonFundamentalType T> std::expected<std::reference_wrapper<T>, JsonError> JsonValue::as()
+template <JsonFundamentalType T> std::expected<std::reference_wrapper<T>, Core::JsonError> JsonValue::as()
 {
-    if constexpr (is<T>())
+    if (is<T>())
     {
         return std::ref(std::get<T>(m_data));
     }
@@ -25,7 +27,7 @@ template <JsonFundamentalType T> std::expected<std::reference_wrapper<T>, JsonEr
 
 template <JsonFundamentalType T> std::expected<std::reference_wrapper<const T>, Core::JsonError> JsonValue::as() const
 {
-    if constexpr (is<T>())
+    if (is<T>())
     {
         return std::cref(std::get<T>(m_data));
     }
@@ -37,74 +39,32 @@ template <JsonFundamentalType T> std::expected<std::reference_wrapper<const T>, 
 
 inline std::expected<std::reference_wrapper<JsonArray>, JsonError> JsonValue::asArray()
 {
-    if (isArray())
-    {
-        return std::ref(std::get<JsonArray>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<JsonArray>();
 };
 
 inline std::expected<std::reference_wrapper<const JsonArray>, JsonError> JsonValue::asArray() const
 {
-    if (isArray())
-    {
-        return std::cref(std::get<JsonArray>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<JsonArray>();
 };
 
 inline std::expected<std::reference_wrapper<const JsonObject>, JsonError> JsonValue::asObject() const
 {
-    if (isObject())
-    {
-        return std::cref(std::get<JsonObject>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<JsonObject>();
 };
 
 inline std::expected<std::reference_wrapper<JsonObject>, JsonError> JsonValue::asObject()
 {
-    if (isObject())
-    {
-        return std::ref(std::get<JsonObject>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<JsonObject>();
 };
 
 inline std::expected<std::reference_wrapper<JsonNull>, JsonError> JsonValue::asNull()
 {
-    if (isNull())
-    {
-        return std::ref(std::get<JsonNull>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<std::monostate>();
 };
 
 inline std::expected<std::reference_wrapper<const JsonNull>, JsonError> JsonValue::asNull() const
 {
-    if (isNull())
-    {
-        return std::cref(std::get<JsonNull>(m_data));
-    }
-    else
-    {
-        return std::unexpected(Core::JsonError::invalid_type);
-    }
+    return as<std::monostate>();
 };
 
 inline std::expected<JsonValue, Core::JsonError> JsonValue::get(const std::string &key) const

@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Core/JsonValue.Types.h"
+#include "JsonValue.Types.h"
 #include <type_traits>
 
 namespace Core
 {
 
-class JsonValue;
-
 template <typename T>
 concept JsonFundamentalType = std::is_same_v<T, JsonNull> || std::is_same_v<T, JsonInt> ||
-                              std::is_same_v<T, JsonDouble> || std::is_same_v<T, JsonString>;
+                              std::is_same_v<T, JsonDouble> || std::is_same_v<T, JsonString>
+                              || std::is_same_v<T, JsonObject> || std::is_same_v<T, JsonArray>;
 
 template <typename TKey>
 concept Stringlike = std::is_convertible_v<TKey, JsonString>;
