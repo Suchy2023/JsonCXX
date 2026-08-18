@@ -8,5 +8,3 @@ add_project_test(
     JsonValue.Constructors.Test.cpp
     JsonValue.Mutators.Test.cpp
 )
-
-target_link_libraries(core_tests PRIVATE Core)
