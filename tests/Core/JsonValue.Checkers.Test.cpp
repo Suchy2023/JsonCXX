@@ -4,20 +4,25 @@
 #include "gtest/gtest.h"
 #include <string>
 
+namespace Tests
+{
+
 template <typename T> class JsonValue_Checkers_Test : public ::testing::Test
 {
 };
 
-using JsonUnderlyingTypes = ::testing::Types<Core::JsonNull, Core::JsonInt, Core::JsonDouble, Core::JsonString,
-                                             Core::JsonObject, Core::JsonArray>;
+using JsonUnderlyingTypes =
+    ::testing::Types<Core::JsonNull, Core::JsonInt, Core::JsonDouble,
+                     Core::JsonString, Core::JsonObject, Core::JsonArray>;
 
 TYPED_TEST_SUITE(JsonValue_Checkers_Test, JsonUnderlyingTypes);
 
 TYPED_TEST(JsonValue_Checkers_Test, is_returns_true_for_own_type)
 {
-    using T = TypeParam;
+  using T = TypeParam;
 
-    Core::JsonValue json{T{}};
+  Core::JsonValue json{T{}};
 
-    EXPECT_TRUE(json.is<T>());
+  EXPECT_TRUE(json.is<T>());
 }
+} // namespace Tests
