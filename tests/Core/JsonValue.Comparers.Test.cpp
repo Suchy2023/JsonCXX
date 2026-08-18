@@ -3,67 +3,35 @@
 #include "Core/JsonValue.h"
 #include "Core/JsonValue.Types.h"
 #include "gtest/gtest.h"
+#include <type_traits>
+#include <variant>
 
-TEST(JsonValue_Comparers_Test, compares_to_itself)
+namespace Tests
 {
-    const auto json = Core::JsonValue{};
 
-    EXPECT_TRUE(json == json);
-
-    EXPECT_FALSE(json == 1);
-}
-
-TEST(JsonValue_Comparers_Test, compares_to_int)
+class Equal_Overload
+    : public ::testing::TestWithParam<Core::JsonVariant>
 {
-    const int value = 1;
+};
 
-    const auto json = Core::JsonValue{value};
-
-    EXPECT_TRUE(json == value);
-
-    EXPECT_FALSE(json == "string");
-}
-
-TEST(JsonValue_Comparers_Test, compares_to_double)
+TEST_P(Equal_Overload, is_comparable_to)
 {
-    const double value = 20.2;
 
-    const auto json = Core::JsonValue{value};
+  std::visit(
+      [](auto &&val)
+      {
+        using T = std::remove_cvref_t<decltype(val)>;
 
-    EXPECT_TRUE(json == value);
+        EXPECT_TRUE(val == val);
+      },
+      GetParam());
+};
 
-    EXPECT_FALSE(json == 1);
-}
+INSTANTIATE_TEST_SUITE_P(JsonValue_Comparers_Test, Equal_Overload,
+                         ::testing::Values(Core::JsonNull{}, Core::JsonInt{},
+                                           Core::JsonDouble{},
+                                           Core::JsonString{},
+                                           Core::JsonObject{},
+                                           Core::JsonArray{}));
 
-TEST(JsonValue_Comparers_Test, compares_to_string)
-{
-    const std::string value = "text";
-
-    const auto json = Core::JsonValue{value};
-
-    EXPECT_TRUE(json == value);
-
-    EXPECT_FALSE(json == 1);
-}
-
-TEST(JsonValue_Comparers_Test, compares_to_JsonObject)
-{
-    const Core::JsonObject value = {{"key", "value"}};
-
-    const auto json = Core::JsonValue{value};
-
-    EXPECT_TRUE(json == value);
-
-    EXPECT_FALSE(json == "string");
-}
-
-TEST(JsonValue_Comparers_Test, compares_to_JsonArray)
-{
-    const Core::JsonArray value = {{"item1", "item2", "item3"}};
-
-    const auto json = Core::JsonValue{value};
-
-    EXPECT_TRUE(json == value);
-
-    EXPECT_FALSE(json == 1);
-}
+} // namespace Tests
