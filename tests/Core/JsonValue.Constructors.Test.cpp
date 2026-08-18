@@ -1,71 +1,35 @@
 
 #include "Core/JsonValue.h"
-#include "Core/JsonValue.Types.h"
-#include <gtest/gtest.h>
+#include "helpers/JsonTypeHelpers.h"
+#include "gtest/gtest.h"
 #include <string>
-#include <variant>
+#include <type_traits>
 
-TEST(JsonValue_Constructors_Test, default_constructor_makes_null)
+namespace Tests
 {
-    const auto json = Core::JsonValue{};
 
-    EXPECT_TRUE(json.isNull());
+template <typename T> class JsonValue_Constructors_Test : public ::testing::Test
+{
+};
+
+TYPED_TEST_SUITE(JsonValue_Constructors_Test, Helpers::JsonConstructibleFrom);
+
+TYPED_TEST(JsonValue_Constructors_Test, is_nothrow_constructible_from)
+{
+    EXPECT_TRUE((std::is_nothrow_constructible_v<Core::JsonValue, TypeParam>));
 }
 
-TEST(JsonValue_Constructors_Test, constructible_from_null)
+TEST(JsonValue_Constructors_Test, is_nothrow_constructible)
 {
-    const auto json1 = Core::JsonValue{std::monostate{}};
+    EXPECT_TRUE(std::is_nothrow_default_constructible_v<Core::JsonValue>);
 
-    const auto json2 = Core::JsonValue{NULL};
+    EXPECT_TRUE((std::is_nothrow_copy_constructible_v<Core::JsonValue>));
 
-    EXPECT_TRUE(json1.isNull());
+    EXPECT_TRUE((std::is_nothrow_move_constructible_v<Core::JsonValue>));
 
-    EXPECT_TRUE(json2.isNull());
+    EXPECT_TRUE((std::is_copy_assignable_v<Core::JsonValue>));
+
+    EXPECT_TRUE((std::is_move_assignable_v<Core::JsonValue>));
 }
 
-TEST(JsonValue_Constructors_Test, constructible_from_int)
-{
-    const auto json = Core::JsonValue{1};
-
-    EXPECT_TRUE(json.is<int>());
-}
-
-TEST(JsonValue_Constructors_Test, constructible_from_double)
-{
-    const auto json = Core::JsonValue{21.3};
-
-    EXPECT_TRUE(json.is<double>());
-}
-
-TEST(JsonValue_Constructors_Test, constructible_from_string_like)
-{
-    const auto json1 = Core::JsonValue{"wujek"};
-    const auto json2 = Core::JsonValue{'1'};
-
-    const std::string txt = "1212";
-
-    const auto json3 = Core::JsonValue{txt};
-
-    EXPECT_TRUE(json1.is<std::string>());
-    EXPECT_TRUE(json2.is<std::string>());
-    EXPECT_TRUE(json3.is<std::string>());
-}
-
-TEST(JsonValue_Constructors_Test, constructible_from_JsonObject)
-{
-    const Core::JsonObject jsonObject = {{"key", 1}};
-
-    const auto json1 = Core::JsonValue{jsonObject};
-
-    EXPECT_TRUE(json1.isObject());
-}
-
-TEST(JsonValue_Constructors_Test, constructible_from_JsonArray)
-{
-    const Core::JsonArray jsonArray = {{"key", 1}};
-
-    const auto json1 = Core::JsonValue{jsonArray};
-
-    EXPECT_TRUE(json1.isArray());
-}
-
+} // namespace Tests
