@@ -13,61 +13,74 @@ namespace Core
 class JsonValue
 {
 
-  public:
-    /**
-    Ctors
-     **/
+public:
+  /**
+  Ctors
+   **/
 
-    template <JsonValueLike T, typename X = disable_if_same_or_derived<JsonValue, T>>
-    JsonValue(T &&value);
+  template <JsonValueLike T,
+            typename X = disable_if_same_or_derived<JsonValue, T>>
+  JsonValue(T &&value);
 
-    explicit JsonValue();
+  explicit JsonValue() noexcept;
 
-    /**
-    Checkers
-     **/
-    template <JsonFundamentalType T> bool is() const;
-    bool isNull() const;
-    bool isArray() const;
-    bool isObject() const;
+  /**
+  Checkers
+   **/
+  template <JsonFundamentalType T> bool is() const;
+  bool isNull() const;
+  bool isArray() const;
+  bool isObject() const;
 
-    /**
-    Accessors
-     **/
-    template <JsonFundamentalType T> std::expected<std::reference_wrapper<T>, JsonError> as();
-    template <JsonFundamentalType T> std::expected<std::reference_wrapper<const T>, JsonError> as() const;
-    std::expected<std::reference_wrapper<JsonArray>, JsonError> asArray();
-    std::expected<std::reference_wrapper<const JsonArray>, JsonError> asArray() const;
-    std::expected<std::reference_wrapper<JsonObject>, JsonError> asObject();
-    std::expected<std::reference_wrapper<const JsonObject>, JsonError> asObject() const;
-    std::expected<std::reference_wrapper<JsonNull>, JsonError> asNull();
-    std::expected<std::reference_wrapper<const JsonNull>, JsonError> asNull() const;
+  /**
+  Accessors
+   **/
+  template <JsonFundamentalType T>
+  std::expected<std::reference_wrapper<T>, JsonError> as();
+  template <JsonFundamentalType T>
+  std::expected<std::reference_wrapper<const T>, JsonError> as() const;
+  std::expected<std::reference_wrapper<JsonArray>, JsonError> asArray();
+  std::expected<std::reference_wrapper<const JsonArray>, JsonError>
+  asArray() const;
+  std::expected<std::reference_wrapper<JsonObject>, JsonError> asObject();
+  std::expected<std::reference_wrapper<const JsonObject>, JsonError>
+  asObject() const;
+  std::expected<std::reference_wrapper<JsonNull>, JsonError> asNull();
+  std::expected<std::reference_wrapper<const JsonNull>, JsonError>
+  asNull() const;
 
-    // object mutators
-    template <Stringlike TKey, ConvertibleToJson TValue>
-    std::expected<bool, Core::JsonError> emplace(TKey &&key, TValue &&value);
+  // object mutators
 
-    std::expected<JsonValue, Core::JsonError> get(const std::string &key) const;
+  /**
+   * emplaces key:value pair in object
+   * if current value isn't object, the object is created
+   * discarding previous value
+   *@returns reference to emplaced value
+   **/
+  template <Stringlike TKey, ConvertibleToJson TValue>
+  std::expected<std::reference_wrapper<JsonValue>, Core::JsonError>
+  emplace(TKey &&key, TValue &&value);
 
-    void remove();
+  std::expected<JsonValue, Core::JsonError> get(const std::string &key) const;
 
-    void update();
+  void remove();
 
-    // array methods
+  void update();
 
-    void emplace_back();
+  // array methods
 
-    // checks if object has key
-    std::expected<bool, Core::JsonError> has(const std::string &key) const;
+  void emplace_back();
 
-    // Comparers
-    template <JsonValueLike T>
-    bool strictlyEquals(T &&json) const;
+  // checks if object has key
+  std::expected<bool, Core::JsonError> has(const std::string &key) const;
 
-    template <JsonValueLike T> bool operator==(T &&other) const;
+  // Comparers
+  template <JsonValueLike T> bool strictlyEquals(T &&json) const;
 
-  private:
-    JsonVariant m_data{JsonNull{}};
+  template <JsonValueLike T> bool operator==(T &&other) const;
+
+private:
+  JsonVariant m_data{JsonNull{}};
 };
 } // namespace Core
 #include "JsonValue.Accessors.inl"

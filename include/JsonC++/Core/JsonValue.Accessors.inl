@@ -72,7 +72,7 @@ inline std::expected<JsonValue, Core::JsonError> JsonValue::get(const std::strin
     return asObject().and_then([&](const JsonObject &json) -> std::expected<JsonValue, JsonError> {
         if (has(key))
         {
-            return json.at(key);
+            return json.at(key); 
         }
         else
         {

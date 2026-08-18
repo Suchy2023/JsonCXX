@@ -6,27 +6,43 @@
 #include "Core/JsonValue.Types.h"
 #include "JsonError.h"
 #include <expected>
+#include <functional>
 
 namespace Core
 {
 // object mutators
 template <Stringlike TKey, ConvertibleToJson TValue>
-std::expected<bool, Core::JsonError> JsonValue::emplace(TKey &&key, TValue &&value)
+std::expected<std::reference_wrapper<JsonValue>, Core::JsonError>
+JsonValue::emplace(TKey &&key, TValue &&value)
 {
-    if (!isObject())
-    {
-        m_data = JsonObject{};
-    }
+  if (!isObject())
+  {
+    m_data = JsonObject{};
+  }
 
-    return asObject().and_then(
-        [key = std::forward<TKey>(key), value = std::forward<TValue>(value)](std::reference_wrapper<JsonObject> ref) {
-            ref.get().emplace(std::move(key), std::move(value));
+  JsonObject obj;
+  const auto x = obj.emplace("k", "");
 
-            return std::expected<bool, JsonError>{true};
-        });
+  const auto y = x.first;
+
+  const auto z = y->second;
+
+  return asObject().and_then(
+      [key = std::forward<TKey>(key),
+       value = std::forward<TValue>(value)](JsonObject &object)
+          -> std::expected<std::reference_wrapper<JsonValue>, JsonError>
+      {
+        const auto resultPair = object.emplace(std::move(key), std::move(value));
+
+        if (!resultPair.second)
+        {
+            return std::unexpected(JsonError::could_not_emplace);
+        }
+
+        return resultPair.first->second;
+      });
 };
 
 // array muttators
-
 
 } // namespace Core

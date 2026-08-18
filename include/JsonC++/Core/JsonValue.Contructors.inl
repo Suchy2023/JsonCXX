@@ -12,9 +12,14 @@
 namespace Core
 {
 
-inline JsonValue::JsonValue()
+inline JsonValue::JsonValue() noexcept
 {
 }
+
+//check order:
+    //bool
+    //char
+    //intergral??
 
 template <JsonValueLike T, typename X> JsonValue::JsonValue(T &&value)
 {
@@ -44,7 +49,7 @@ template <JsonValueLike T, typename X> JsonValue::JsonValue(T &&value)
     }
     else if constexpr (std::is_convertible_v<std::remove_cvref_t<T>, char>)
     {
-        m_data = std::string{value};
+        m_data = std::string{std::forward<T>(value)};
     }
     else if constexpr (std::is_same_v<std::remove_cvref_t<T>, JsonObject>)
     {

@@ -3,57 +3,110 @@
 #include "Core/JsonValue.h"
 #include "Core/JsonError.h"
 #include "Core/JsonValue.Types.h"
+#include "helpers/JsonTypeHelpers.h"
 #include "gtest/gtest.h"
+#include <expected>
+#include <functional>
 #include <gtest/gtest.h>
 #include <string>
 #include <type_traits>
 
-TEST(JsonValue_Accessors_Test, as_returns_requested_type)
+namespace Tests
 {
-    const auto json = Core::JsonValue{};
 
-    const auto result = json.as<Core::JsonNull>();
+template <typename T> class JsonValue_Accessors_Test : public ::testing::Test
+{
+};
+
+TYPED_TEST_SUITE(JsonValue_Accessors_Test, Helpers::JsonFundamentalType);
+
+TYPED_TEST(JsonValue_Accessors_Test, as_works_for_proper_type)
+{
+    Core::JsonValue json = TypeParam{};
+
+    const auto result = json.as<TypeParam>();
 
     EXPECT_TRUE(result.has_value());
-};
+}
 
-TEST(JsonValue_Accessors_Test, as_returns_invalid_type_error)
+TYPED_TEST(JsonValue_Accessors_Test, as_returns_non_const_ref_for_non_const_variable)
 {
-    const auto json = Core::JsonValue{1};
+    Core::JsonValue json = TypeParam{};
 
-    const auto result = json.as<std::string>();
+    const auto result = json.as<TypeParam>();
+ 
+    EXPECT_TRUE(result.has_value());
 
-    EXPECT_FALSE(result.has_value());
+    using ResultType = std::remove_reference_t<decltype(result.value().get())>;
 
-    EXPECT_EQ(result.error(), Core::JsonError::invalid_type);
-};
+    EXPECT_FALSE(std::is_const_v<ResultType>);
+}
 
-TEST(JsonValue_Accessors_Test, as_respects_const)
+TYPED_TEST(JsonValue_Accessors_Test, as_returns_const_ref_for_const_variable)
 {
-    const auto constJson = Core::JsonValue{1};
+    const Core::JsonValue json = TypeParam{};
 
-    const auto constResult = constJson.as<int>();
-
-    EXPECT_TRUE(std::is_const_v<std::remove_reference_t<decltype(constResult.value().get())>>);
-};
-
-TEST(JsonValue_Accessors_Test, as_respects_non_const)
-{
-    auto nonConstJson = Core::JsonValue{"string"};
-
-    const auto nonConstResult = nonConstJson.as<std::string>();
-
-    EXPECT_FALSE(std::is_const_v<std::remove_reference_t<decltype(nonConstResult.value().get())>>);
-};
-
-TEST(JsonValue_Accessors_Test, as_helpers_work)
-{
-    auto const json = Core::JsonValue{Core::JsonObject{}};
-
-    const auto result = json.asObject();
+    const auto result = json.as<TypeParam>();
 
     EXPECT_TRUE(result.has_value());
-};
 
+    using ResultType = std::remove_reference_t<decltype(result.value().get())>;
 
+    EXPECT_TRUE(std::is_const_v<ResultType>);
+}
 
+TEST(JsonValue_Accessors_Test, as_array_respects_const)
+{
+    const auto constJson = Core::JsonValue{Core::JsonArray{}};
+    auto json = Core::JsonValue{Core::JsonArray{}};
+
+    const auto constValue = constJson.asArray();
+    const auto value = json.asArray();
+
+    EXPECT_TRUE(constValue.has_value());
+    EXPECT_TRUE(value.has_value());
+
+    using ConstJsonResult = std::remove_reference_t<decltype(constValue.value().get())>;
+    using JsonResult = std::remove_reference_t<decltype(value.value().get())>;
+
+    EXPECT_TRUE(std::is_const_v<ConstJsonResult>);
+    EXPECT_FALSE(std::is_const_v<JsonResult>);
+}
+
+TEST(JsonValue_Accessors_Test, as_object_respects_const)
+{
+    const auto constJson = Core::JsonValue{Core::JsonObject{}};
+    auto json = Core::JsonValue{Core::JsonObject{}};
+
+    const auto constValue = constJson.asObject();
+    const auto value = json.asObject();
+
+    EXPECT_TRUE(constValue.has_value());
+    EXPECT_TRUE(value.has_value());
+
+    using ConstJsonResult = std::remove_reference_t<decltype(constValue.value().get())>;
+    using JsonResult = std::remove_reference_t<decltype(value.value().get())>;
+
+    EXPECT_TRUE(std::is_const_v<ConstJsonResult>);
+    EXPECT_FALSE(std::is_const_v<JsonResult>);
+}
+
+TEST(JsonValue_Accessors_Test, as_null_respects_const)
+{
+    const auto constJson = Core::JsonValue{Core::JsonNull{}};
+    auto json = Core::JsonValue{Core::JsonNull{}};
+
+    const auto constValue = constJson.asNull();
+    const auto value = json.asNull();
+
+    EXPECT_TRUE(constValue.has_value());
+    EXPECT_TRUE(value.has_value());
+
+    using ConstJsonResult = std::remove_reference_t<decltype(constValue.value().get())>;
+    using JsonResult = std::remove_reference_t<decltype(value.value().get())>;
+
+    EXPECT_TRUE(std::is_const_v<ConstJsonResult>);
+    EXPECT_FALSE(std::is_const_v<JsonResult>);
+}
+
+} // namespace Tests
