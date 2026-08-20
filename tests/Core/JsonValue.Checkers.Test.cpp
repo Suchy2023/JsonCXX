@@ -23,9 +23,20 @@ TYPED_TEST(JsonValue_Checkers_Test, is_returns_true_for_own_type) {
 }
 } // namespace Tests
 
-TEST(JsonValue_Checkers_Test, has_works) {
+TEST(JsonValue_Checkers_Test, has_returns_true_when_key_exists) {
 
   Core::JsonValue json{Core::JsonObject{{"key", 1}}};
 
   EXPECT_TRUE(json.has("key"));
+}
+
+TEST(JsonValue_Checkers_Test, has_returns_false_when_key_not_found) {
+
+  Core::JsonValue json{Core::JsonObject{}};
+
+  const auto result = json.has("key");
+
+  EXPECT_TRUE(result.has_value());
+
+  EXPECT_FALSE(result.value());
 }

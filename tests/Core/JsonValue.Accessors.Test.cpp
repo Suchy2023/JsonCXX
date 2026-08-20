@@ -107,6 +107,29 @@ TEST(JsonValue_Accessors_Test, as_null_respects_const)
 
     EXPECT_TRUE(std::is_const_v<ConstJsonResult>);
     EXPECT_FALSE(std::is_const_v<JsonResult>);
-}
+};
+
+TEST(JsonValue_Accessors_Test, results_in_error_on_non_object)
+{    
+    const auto json = Core::JsonValue{Core::JsonNull{}};
+
+    const auto result = json.get("key");
+
+    EXPECT_FALSE(result.has_value());
+
+    EXPECT_EQ(result.error(), Core::JsonError::invalid_type);
+};
+
+TEST(JsonValue_Accessors_Test, results_in_error_if_no_key_found)
+{    
+    const auto json = Core::JsonValue{Core::JsonObject{}};
+
+    const auto result = json.get("key");
+
+    EXPECT_FALSE(result.has_value());
+
+    EXPECT_EQ(result.error(), Core::JsonError::key_not_found);
+};
+
 
 } // namespace Tests
