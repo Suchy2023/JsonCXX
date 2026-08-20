@@ -17,3 +17,5 @@ function(add_project_test TEST_NAME)
 endfunction()
 
 add_subdirectory(Core)
+
+add_subdirectory(JsonParser)
