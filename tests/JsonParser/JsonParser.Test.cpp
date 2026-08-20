@@ -42,3 +42,16 @@ TEST(JsonParserTest, object)
 
   EXPECT_TRUE(result->has("key"));
 }
+
+TEST(JsonParserTest, nested_object)
+{
+  const char *objectJson = R"({"key": {"nested_key": 1}})";
+
+  const auto result = JsonParser::JsonParser::parse(objectJson);
+
+  EXPECT_TRUE(result.has_value());
+
+  EXPECT_TRUE(result->isObject());
+
+  EXPECT_TRUE(result->has("key"));
+}
