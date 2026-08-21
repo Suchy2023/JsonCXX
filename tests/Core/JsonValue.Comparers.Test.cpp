@@ -1,7 +1,7 @@
 
 
-#include "Core/JsonValue.h"
-#include "Core/JsonValue.Types.h"
+#include "JsonC++/Core/JsonValue.h"
+#include "JsonC++/Core/JsonValue.Types.h"
 #include "gtest/gtest.h"
 #include <type_traits>
 #include <variant>

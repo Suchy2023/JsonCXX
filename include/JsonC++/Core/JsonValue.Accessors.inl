@@ -1,15 +1,12 @@
 
 #pragma once
 
-#include "Core/JsonValue.Types.h"
-#include "JsonValue.h"
-
 #include <expected>
 #include <functional>
 #include <variant>
 
-#include "Core/JsonValue.Checkers.inl"
-#include "Core/JsonValue.Concepts.h"
+#include "JsonValue.h"
+
 namespace Core {
 
 template <JsonFundamentalType T>

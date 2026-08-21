@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Core/JsonValue.Types.h"
+#include "JsonC++/Core/JsonValue.Types.h"
 #include "gtest/gtest.h"
 #include <cstddef>
 #include <string>

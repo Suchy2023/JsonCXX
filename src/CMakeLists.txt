@@ -5,19 +5,28 @@ add_library(
     main.cpp
 )
 
-target_include_directories(
-    src
-    PRIVATE
-    ${CMAKE_SOURCE_DIR}/include/JsonC++
+add_subdirectory(
+    JsonParser
+)
+
+add_subdirectory(
+    Core
 )
 
 add_executable(
-    json_cpp_main
+    main
     main.cpp
 )
 
 target_include_directories(
-    json_cpp_main
+    main
     PRIVATE
-    ${CMAKE_SOURCE_DIR}/include/JsonC++
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+target_link_libraries(
+    main
+    PRIVATE
+    Core
+    JsonParser
 )

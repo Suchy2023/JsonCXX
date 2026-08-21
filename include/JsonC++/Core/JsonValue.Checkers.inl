@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/JsonValue.Concepts.h"
+#include "JsonValue.Concepts.h"
 #include "JsonValue.h"
 #include <variant>
 
-#include "Core/JsonValue.Types.h"
+#include "JsonValue.Types.h"
 
 namespace Core
 {
