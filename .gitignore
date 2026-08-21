@@ -1,6 +1,7 @@
 
 
 build
+debug
 out
 .cache
 .clang-format
