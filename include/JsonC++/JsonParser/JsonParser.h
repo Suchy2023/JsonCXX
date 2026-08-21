@@ -8,6 +8,7 @@
 #include <cctype>
 #include <expected>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <ostream>
 #include <string>
@@ -37,9 +38,9 @@ public:
       } else {
         iterator++;
       }
-
-      return json;
     }
+
+    return json;
   };
 
 private:
@@ -74,6 +75,10 @@ private:
           currentNumber = currentNumber * 10 + *iterator - 48;
         }
       }
+
+      if (!isDigit && *iterator != 46){
+        break;
+      }
     };
 
     return Core::JsonValue{currentNumber};
@@ -98,6 +103,8 @@ private:
 
   static Core::JsonValue parseObject(const char *&iterator,
                                      const char *const end) {
+    std::cout << "parsing_object" << std::endl;
+
     iterator++;
     bool keyStarted = false;
     std::string currentKey{};
@@ -106,9 +113,13 @@ private:
     auto json = Core::JsonValue{Core::JsonObject{}};
 
     for (; iterator != end; ++iterator) {
+
       if (afterValueStatement) {
 
+        std::cout << "after stat" << std::endl;
+        
         const auto result = json.emplace(currentKey, whatsNext(iterator, end));
+        std::cout << "emplace result: " << result.has_value() << std::endl;
 
         currentKey.clear();
         keyStarted = false;
@@ -117,14 +128,18 @@ private:
       }
 
       if (*iterator == 58) {
+        std::cout << "colon" << std::endl;
         afterValueStatement = true;
         continue;
       }
       if (*iterator == 34 && keyStarted) {
+        std::cout << "key end" << std::endl;
         keyStarted = false;
       } else if (keyStarted) {
         currentKey += *iterator;
+        std::cout << "key builidng " << currentKey << std::endl;
       } else if (*iterator == 34) {
+        std::cout << "key_started" << std::endl;
         keyStarted = true;
         continue;
       }
@@ -139,30 +154,40 @@ private:
   static Core::JsonValue whatsNext(const char *&iterator,
                                    const char *const end) {
 
+    std::cout << "whats'next:" << *iterator << std::endl;
+
     if (std::isdigit(*iterator)) {
+      std::cout << "whats next number" << std::endl;
       return parseNumber(iterator, end);
     }
 
+    // guard on whitespace
+
     switch (*iterator) {
     case 34: {
+      std::cout << "whats next string" << std::endl;
       return parseString(iterator, end);
       break;
     }
     case 123: {
+      std::cout << "whats next object" << std::endl;
       return parseObject(iterator, end);
       break;
     }
     case 91: {
+      std::cout << "whats next array" << std::endl;
       return parseArray(iterator, end);
       break;
     }
     default: {
+      std::cout << "whats next default" << std::endl;
       return Core::JsonValue{};
     }
     }
   };
 
   static bool isSpecialChar(const char *const &iterator) {
+
     if (std::isdigit(*iterator)) {
       return true;
     }
