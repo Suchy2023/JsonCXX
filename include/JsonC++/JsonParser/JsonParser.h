@@ -1,214 +1,45 @@
 
+#pragma once
 
-#include "Core/JsonValue.Types.h"
-#include "Core/JsonValue.h"
+#include "JsonC++/Core/JsonValue.h"
 #include "JsonParserError.h"
 #include "cmath"
-#include <algorithm>
 #include <cctype>
 #include <expected>
-#include <iostream>
-#include <iterator>
-#include <map>
-#include <ostream>
 #include <string>
 #include <string_view>
 
-namespace JsonParser {
+namespace JsonParser
+{
 
-struct ParseResult {
-  const char *iterator;
-  Core::JsonValue json;
+struct ParseResult
+{
+    const char *iterator;
+    Core::JsonValue json;
 };
 
-class JsonParser {
+class JsonParser
+{
 
-public:
-  static std::expected<Core::JsonValue, JsonParserError>
-  parse(std::string_view value) {
-    auto iterator = value.begin();
-    const char *const end = value.end();
+  public:
+    static std::expected<Core::JsonValue, JsonParserError> parse(std::string_view value);
 
-    auto json = Core::JsonValue{};
+    static Core::JsonValue parseNumber(const char *&iterator, const char *const &end);
 
-    while (iterator != end) {
+    static std::expected<int, JsonParserError> parseInt(const char *&iterator, const char *const &end);
 
-      if (isSpecialChar(iterator)) {
-        json = whatsNext(iterator, end);
-      } else {
-        iterator++;
-      }
-    }
+    static Core::JsonValue parseFloat(const char *&iterator, const char *const &end);
 
-    return json;
-  };
+    static Core::JsonValue parseDouble(const char *&iterator, const char *const &end);
 
-private:
-  static Core::JsonValue parseNumber(const char *&iterator,
-                                     const char *const end) {
-    double currentNumber{};
-    int digitsAfterDot{};
+    static std::string parseString(const char *&iterator, const char *const &end);
 
-    bool isFloating = false;
-    bool prevDigit = false;
-    bool isDigit = true;
+    static Core::JsonValue parseObject(const char *&iterator, const char *const &end);
 
-    for (; iterator != end; ++iterator) {
-      isDigit = std::isdigit(*iterator);
+    static Core::JsonValue parseArray(const char *&iterator, const char *const end);
 
-      if (*iterator == 46) {
-        isDigit = false;
-        isFloating = true;
-      }
+    static Core::JsonValue iterate(const char *&iterator, const char *const end);
 
-      if (isDigit) {
-
-        if (isFloating) {
-          digitsAfterDot++;
-          const double toAdd =
-              (double)(*iterator - 48) / std::pow(10, digitsAfterDot);
-          currentNumber = (currentNumber + toAdd);
-        } else if (prevDigit) {
-          currentNumber = currentNumber * 10 + *iterator - 48;
-        } else {
-          prevDigit = true;
-          currentNumber = currentNumber * 10 + *iterator - 48;
-        }
-      }
-
-      if (!isDigit && *iterator != 46){
-        break;
-      }
-    };
-
-    return Core::JsonValue{currentNumber};
-  };
-
-  static std::string parseString(const char *&iterator, const char *const end) {
-    std::string result{};
-
-    bool stringStarted = true;
-
-    for (; iterator != end; ++iterator) {
-      if (*iterator == 34) {
-        stringStarted = true;
-        continue;
-      }
-
-      result += *iterator;
-    }
-
-    return std::move(result);
-  };
-
-  static Core::JsonValue parseObject(const char *&iterator,
-                                     const char *const end) {
-    std::cout << "parsing_object" << std::endl;
-
-    iterator++;
-    bool keyStarted = false;
-    std::string currentKey{};
-    bool afterValueStatement = false;
-
-    auto json = Core::JsonValue{Core::JsonObject{}};
-
-    for (; iterator != end; ++iterator) {
-
-      if (afterValueStatement) {
-
-        std::cout << "after stat" << std::endl;
-        
-        const auto result = json.emplace(currentKey, whatsNext(iterator, end));
-        std::cout << "emplace result: " << result.has_value() << std::endl;
-
-        currentKey.clear();
-        keyStarted = false;
-        afterValueStatement = false;
-        continue;
-      }
-
-      if (*iterator == 58) {
-        std::cout << "colon" << std::endl;
-        afterValueStatement = true;
-        continue;
-      }
-      if (*iterator == 34 && keyStarted) {
-        std::cout << "key end" << std::endl;
-        keyStarted = false;
-      } else if (keyStarted) {
-        currentKey += *iterator;
-        std::cout << "key builidng " << currentKey << std::endl;
-      } else if (*iterator == 34) {
-        std::cout << "key_started" << std::endl;
-        keyStarted = true;
-        continue;
-      }
-    }
-
-    return json;
-  };
-
-  static Core::JsonValue parseArray(const char *&iterator,
-                                    const char *const end) {}
-
-  static Core::JsonValue whatsNext(const char *&iterator,
-                                   const char *const end) {
-
-    std::cout << "whats'next:" << *iterator << std::endl;
-
-    if (std::isdigit(*iterator)) {
-      std::cout << "whats next number" << std::endl;
-      return parseNumber(iterator, end);
-    }
-
-    // guard on whitespace
-
-    switch (*iterator) {
-    case 34: {
-      std::cout << "whats next string" << std::endl;
-      return parseString(iterator, end);
-      break;
-    }
-    case 123: {
-      std::cout << "whats next object" << std::endl;
-      return parseObject(iterator, end);
-      break;
-    }
-    case 91: {
-      std::cout << "whats next array" << std::endl;
-      return parseArray(iterator, end);
-      break;
-    }
-    default: {
-      std::cout << "whats next default" << std::endl;
-      return Core::JsonValue{};
-    }
-    }
-  };
-
-  static bool isSpecialChar(const char *const &iterator) {
-
-    if (std::isdigit(*iterator)) {
-      return true;
-    }
-
-    switch (*iterator) {
-    case 34: {
-      return true;
-      break;
-    }
-    case 123: {
-      return true;
-      break;
-    }
-    case 91: {
-      return true;
-      break;
-    }
-    default: {
-      return false;
-    }
-    };
-  };
+    static Core::JsonValue getValue(const char *&iterator, const char *const &end);
 };
 } // namespace JsonParser
