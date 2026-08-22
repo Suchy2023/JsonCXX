@@ -1,0 +1,14 @@
+
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "cwd": "${workspaceRoot}",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/debug/src/json_cpp_main",
+            "preLaunchTask": "Rebuild"
+        }
+    ]
+}

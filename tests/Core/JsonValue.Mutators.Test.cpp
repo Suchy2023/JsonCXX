@@ -1,7 +1,7 @@
 
 
-#include "Core/JsonValue.h"
-#include "helpers/JsonTypeHelpers.h"
+#include "JsonC++/Core/JsonValue.h"
+#include "JsonTypeHelpers.h"
 #include "gtest/gtest.h"
 #include <gtest/gtest.h>
 

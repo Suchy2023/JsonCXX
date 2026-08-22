@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Core/JsonValue.Types.h"
+#include "JsonValue.Types.h"
 #include "JsonValue.h"
 
 #include "JsonValue.Concepts.h"

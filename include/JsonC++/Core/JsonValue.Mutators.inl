@@ -1,9 +1,8 @@
 #pragma once
 
 #include "JsonValue.h"
-
-#include "Core/JsonValue.Concepts.h"
-#include "Core/JsonValue.Types.h"
+#include "JsonValue.Types.h"
+#include "JsonValue.Types.h"
 #include "JsonError.h"
 #include <expected>
 #include <functional>

@@ -1,6 +1,8 @@
 
 
 build
+debug
 out
 .cache
 .clang-format
+Doxyfile

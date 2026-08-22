@@ -1,6 +1,24 @@
 
 
 add_project_test(
-    json_parser_tests
+    JsonParser_Tests
     JsonParser.Test.cpp
+    helpers.Test.cpp
+    JsonParser.parseNumber.Test.cpp
+    JsonParser.parseInt.Test.cpp
+)
+
+target_include_directories(
+    JsonParser_Tests
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/JsonParser
+    ${CMAKE_SOURCE_DIR}/include
+   
+)
+
+target_link_libraries(
+    JsonParser_Tests
+    PRIVATE
+    JsonParser
+    Core
 )
