@@ -1,4 +1,4 @@
 
 cmake --build build
 
-./build/src/json_cpp_main
+./build/src/main
