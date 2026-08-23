@@ -2,6 +2,7 @@
 #pragma once
 
 #include "JsonC++/Core/JsonValue.h"
+#include "JsonParser.Concepts.h"
 #include "JsonParserError.h"
 #include "cmath"
 #include <cctype>
@@ -12,34 +13,31 @@
 namespace JsonParser
 {
 
-struct ParseResult
-{
-    const char *iterator;
-    Core::JsonValue json;
-};
-
 class JsonParser
 {
+
+    using Iterator = const char *&;
+    using End = const char *const &;
 
   public:
     static std::expected<Core::JsonValue, JsonParserError> parse(std::string_view value);
 
-    static Core::JsonValue parseNumber(const char *&iterator, const char *const &end);
+    static Core::JsonValue parseNumber(Iterator iterator, End end);
 
-    static std::expected<int, JsonParserError> parseInt(const char *&iterator, const char *const &end);
+    template <Integral T> static std::expected<T, JsonParserError> parseIntegral(Iterator iterator, End end);
 
-    static Core::JsonValue parseFloat(const char *&iterator, const char *const &end);
+    template <Floating T> static std::expected<T, JsonParserError> parseFloating(Iterator iterator, End end);
 
-    static Core::JsonValue parseDouble(const char *&iterator, const char *const &end);
+    static std::string parseString(Iterator iterator, End end);
 
-    static std::string parseString(const char *&iterator, const char *const &end);
+    static Core::JsonValue parseObject(Iterator iterator, End end);
 
-    static Core::JsonValue parseObject(const char *&iterator, const char *const &end);
+    static Core::JsonValue parseArray(Iterator iterator, End end);
 
-    static Core::JsonValue parseArray(const char *&iterator, const char *const end);
+    static Core::JsonValue iterate(Iterator iterator, End end);
 
-    static Core::JsonValue iterate(const char *&iterator, const char *const end);
-
-    static Core::JsonValue getValue(const char *&iterator, const char *const &end);
+    static Core::JsonValue getValue(Iterator iterator, End end);
 };
 } // namespace JsonParser
+
+#include "JsonParser.parseIntegral.tpp"
