@@ -6,3 +6,5 @@ out
 .cache
 .clang-format
 Doxyfile
+
+CMakeFiles
