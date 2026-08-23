@@ -10,7 +10,6 @@ add_library(
     JsonParser.parseObject.cpp
     JsonParser.parseString.cpp
     JsonParser.iterate.cpp
-    JsonParser.parseInt.cpp
 )
 
 target_include_directories(
