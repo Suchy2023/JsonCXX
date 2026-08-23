@@ -1,9 +1,8 @@
 
 
-#include "Core/JsonValue.h"
-#include "Core/JsonError.h"
-#include "Core/JsonValue.Types.h"
-#include "helpers/JsonTypeHelpers.h"
+#include "JsonC++/Core/JsonValue.h"
+#include "JsonC++/Core/JsonValue.Types.h"
+#include "JsonTypeHelpers.h"
 #include "gtest/gtest.h"
 #include <expected>
 #include <functional>
