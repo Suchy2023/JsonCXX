@@ -9,7 +9,8 @@ namespace JsonParser
         parse_error,
         out_of_range,
         not_integral,
-        invalid_format
+        invalid_format,
+        unknown
     };
 
 }

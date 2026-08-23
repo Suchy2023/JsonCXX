@@ -3,8 +3,7 @@
 
 namespace JsonParser
 {
-   Core::JsonValue JsonParser::parseArray(const char *&iterator, const char *const end)
-   {
+Core::JsonValue JsonParser::parseArray(const char *&iterator, const char *const &end) {
 
-   };
+};
 };

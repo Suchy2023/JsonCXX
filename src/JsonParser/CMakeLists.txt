@@ -6,7 +6,6 @@ add_library(
     JsonParser.getValue.cpp
     JsonParser.parse.cpp
     JsonParser.parseArray.cpp
-    JsonParser.parseNumber.cpp
     JsonParser.parseObject.cpp
     JsonParser.parseString.cpp
     JsonParser.iterate.cpp
