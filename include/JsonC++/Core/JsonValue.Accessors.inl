@@ -5,55 +5,59 @@
 #include <functional>
 #include <variant>
 
-#include "JsonValue.h"
+#include "JsonC++/Core/JsonError.h"
+#include "JsonC++/Core/JsonValue.Concepts.h"
+#include "JsonC++/Core/JsonValue.Types.h"
+#include "JsonC++/Core/JsonValue.Types.h"
+#include "JsonC++/Core/JsonValue.h"
 
 namespace Core {
 
-template <JsonFundamentalType T>
+template <JsonValueType T>
 std::expected<std::reference_wrapper<T>, Core::JsonError> JsonValue::as() {
   if (is<T>()) {
-    return std::ref(std::get<T>(m_data));
+    
   } else {
     return std::unexpected(Core::JsonError::invalid_type);
   }
 };
 
-template <JsonFundamentalType T>
+template <JsonValueType T>
 std::expected<std::reference_wrapper<const T>, Core::JsonError>
 JsonValue::as() const {
   if (is<T>()) {
-    return std::cref(std::get<T>(m_data));
+    
   } else {
     return std::unexpected(Core::JsonError::invalid_type);
   }
 }
 
-inline std::expected<std::reference_wrapper<JsonArray>, JsonError>
+inline std::expected<std::reference_wrapper<Json_Array>, JsonError>
 JsonValue::asArray() {
-  return as<JsonArray>();
+  return as<Json_Array>();
 };
 
-inline std::expected<std::reference_wrapper<const JsonArray>, JsonError>
+inline std::expected<std::reference_wrapper<const Json_Array>, JsonError>
 JsonValue::asArray() const {
-  return as<JsonArray>();
+  return as<Json_Array>();
 };
 
-inline std::expected<std::reference_wrapper<const JsonObject>, JsonError>
+inline std::expected<std::reference_wrapper<const Json_Object>, JsonError>
 JsonValue::asObject() const {
-  return as<JsonObject>();
+  return as<Json_Object>();
 };
 
-inline std::expected<std::reference_wrapper<JsonObject>, JsonError>
+inline std::expected<std::reference_wrapper<Json_Object>, JsonError>
 JsonValue::asObject() {
-  return as<JsonObject>();
+  return as<Json_Object>();
 };
 
-inline std::expected<std::reference_wrapper<JsonNull>, JsonError>
+inline std::expected<std::reference_wrapper<Json_Null>, JsonError>
 JsonValue::asNull() {
   return as<std::monostate>();
 };
 
-inline std::expected<std::reference_wrapper<const JsonNull>, JsonError>
+inline std::expected<std::reference_wrapper<const Json_Null>, JsonError>
 JsonValue::asNull() const {
   return as<std::monostate>();
 };
@@ -61,7 +65,7 @@ JsonValue::asNull() const {
 inline std::expected<JsonValue, Core::JsonError>
 JsonValue::get(const std::string &key) const {
   return asObject().and_then(
-      [&](const JsonObject &json) -> std::expected<JsonValue, JsonError> {
+      [&](const Json_Object &json) -> std::expected<Value, JsonError> {
         auto containsKey = has(key);
 
         if (containsKey.has_value()) {
