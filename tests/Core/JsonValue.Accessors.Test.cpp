@@ -56,8 +56,8 @@ TYPED_TEST(JsonValue_Accessors_Test, as_returns_const_ref_for_const_variable)
 
 TEST(JsonValue_Accessors_Test, as_array_respects_const)
 {
-    const auto constJson = Core::JsonValue{Core::JsonArray{}};
-    auto json = Core::JsonValue{Core::JsonArray{}};
+    const auto constJson = Core::JsonValue{Core::Json_Array{}};
+    auto json = Core::JsonValue{Core::Json_Array{}};
 
     const auto constValue = constJson.asArray();
     const auto value = json.asArray();
@@ -74,8 +74,8 @@ TEST(JsonValue_Accessors_Test, as_array_respects_const)
 
 TEST(JsonValue_Accessors_Test, as_object_respects_const)
 {
-    const auto constJson = Core::JsonValue{Core::JsonObject{}};
-    auto json = Core::JsonValue{Core::JsonObject{}};
+    const auto constJson = Core::JsonValue{Core::Json_Object{}};
+    auto json = Core::JsonValue{Core::Json_Object{}};
 
     const auto constValue = constJson.asObject();
     const auto value = json.asObject();
@@ -92,8 +92,8 @@ TEST(JsonValue_Accessors_Test, as_object_respects_const)
 
 TEST(JsonValue_Accessors_Test, as_null_respects_const)
 {
-    const auto constJson = Core::JsonValue{Core::JsonNull{}};
-    auto json = Core::JsonValue{Core::JsonNull{}};
+    const auto constJson = Core::JsonValue{Core::Json_Null{}};
+    auto json = Core::JsonValue{Core::Json_Null{}};
 
     const auto constValue = constJson.asNull();
     const auto value = json.asNull();
@@ -110,7 +110,7 @@ TEST(JsonValue_Accessors_Test, as_null_respects_const)
 
 TEST(JsonValue_Accessors_Test, results_in_error_on_non_object)
 {    
-    const auto json = Core::JsonValue{Core::JsonNull{}};
+    const auto json = Core::JsonValue{Core::Json_Null{}};
 
     const auto result = json.get("key");
 
@@ -121,7 +121,7 @@ TEST(JsonValue_Accessors_Test, results_in_error_on_non_object)
 
 TEST(JsonValue_Accessors_Test, results_in_error_if_no_key_found)
 {    
-    const auto json = Core::JsonValue{Core::JsonObject{}};
+    const auto json = Core::JsonValue{Core::Json_Object{}};
 
     const auto result = json.get("key");
 

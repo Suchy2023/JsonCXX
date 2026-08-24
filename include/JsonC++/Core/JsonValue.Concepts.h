@@ -7,30 +7,34 @@ namespace Core
 {
 
 template <typename T>
-concept JsonFundamentalType = std::is_same_v<T, JsonNull> || std::is_same_v<T, JsonInt> ||
-                              std::is_same_v<T, JsonDouble> || std::is_same_v<T, JsonString>
-                              || std::is_same_v<T, JsonObject> || std::is_same_v<T, JsonArray>;
+concept JsonValueType =
+    std::is_same_v<T, Json_Null> || std::is_same_v<T, Json_Int8> || std::is_same_v<T, Json_Int16> ||
+    std::is_same_v<T, Json_Int32> || std::is_same_v<T, Json_Int64> || std::is_same_v<T, Json_Double> ||
+    std::is_same_v<T, Json_String> || std::is_same_v<T, Json_Object> || std::is_same_v<T, Json_Array>;
 
 template <typename TKey>
-concept Stringlike = std::is_convertible_v<TKey, JsonString>;
+concept Stringlike = std::is_convertible_v<TKey, Json_String>;
 
 template <typename T>
-concept IntLike = std::is_convertible_v<T, JsonInt>;
+concept IntLike = std::is_convertible_v<T, Json_Int8>;
 
 template <typename T>
-concept DoubleLike = std::is_convertible_v<T, JsonDouble>;
+concept DoubleLike = std::is_convertible_v<T, Json_Double>;
 
 template <typename TValue>
-concept ConvertibleToJson = std::is_convertible_v<std::remove_cvref_t<TValue>, JsonNull> ||
-                            std::is_convertible_v<std::remove_cvref_t<TValue>, JsonInt> ||
-                            std::is_convertible_v<std::remove_cvref_t<TValue>, JsonDouble> ||
-                            std::is_convertible_v<std::remove_cvref_t<TValue>, JsonString> ||
-                            std::is_convertible_v<std::remove_cvref_t<TValue>, JsonObject> ||
-                            std::is_convertible_v<std::remove_cvref_t<TValue>, JsonArray> ||
-                            std::is_same_v<std::remove_cvref_t<TValue>, JsonValue>;
+concept ConvertibleToJson = std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Null> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Int8> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Int16> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Int32> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Int64> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Double> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_String> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Object> ||
+                            std::is_convertible_v<std::remove_cvref_t<TValue>, Json_Array> ||
+                            std::is_same_v<std::remove_cvref_t<TValue>, Value>;
 
 template <typename T>
-concept JsonValueLike = std::is_same_v<std::remove_cvref_t<T>, JsonValue> || ConvertibleToJson<T>;
+concept JsonValueLike = std::is_same_v<std::remove_cvref_t<T>, Value> || ConvertibleToJson<T>;
 
 /**
 *@link https://ericniebler.com/2013/08/07/universal-references-and-the-copy-constructo/

@@ -28,10 +28,10 @@ TEST_P(Equal_Overload, is_comparable_to)
 };
 
 INSTANTIATE_TEST_SUITE_P(JsonValue_Comparers_Test, Equal_Overload,
-                         ::testing::Values(Core::JsonNull{}, Core::JsonInt{},
+                         ::testing::Values(Core::Json_Null{}, Core::Json_Int64{},
                                            Core::JsonDouble{},
-                                           Core::JsonString{},
-                                           Core::JsonObject{},
-                                           Core::JsonArray{}));
+                                           Core::Json_String{},
+                                           Core::Json_Object{},
+                                           Core::Json_Array{}));
 
 } // namespace Tests

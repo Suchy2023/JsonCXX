@@ -16,10 +16,10 @@ JsonValue::emplace(TKey &&key, TValue &&value)
 {
   if (!isObject())
   {
-    m_data = JsonObject{};
+    
   }
 
-  JsonObject obj;
+  Json_Object obj;
   const auto x = obj.emplace("k", "");
 
   const auto y = x.first;
@@ -28,7 +28,7 @@ JsonValue::emplace(TKey &&key, TValue &&value)
 
   return asObject().and_then(
       [key = std::forward<TKey>(key),
-       value = std::forward<TValue>(value)](JsonObject &object)
+       value = std::forward<TValue>(value)](Json_Object &object)
           -> std::expected<std::reference_wrapper<JsonValue>, JsonError>
       {
         const auto resultPair = object.emplace(std::move(key), std::move(value));
