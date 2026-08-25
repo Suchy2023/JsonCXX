@@ -14,7 +14,7 @@ namespace JsonParser
     std::string currentKey{};
     bool afterColon = false;
 
-    auto json = Core::JsonValue{Core::JsonObject{}};
+    auto json = Core::JsonValue{Core::Json_Object{}};
 
     for (; iterator != end; ++iterator) {
 
@@ -24,10 +24,10 @@ namespace JsonParser
 
       if (afterColon) {
 
-        std::cout << "after stat" << std::endl;
+        // std::cout << "after stat" << std::endl;
 
-        const auto result = json.emplace(currentKey, iterate(iterator, end));
-        std::cout << "emplace result: " << result.has_value() << std::endl;
+        // const auto result = json.emplace(currentKey, iterate(iterator, end));
+        // std::cout << "emplace result: " << result.has_value() << std::endl;
 
         currentKey.clear();
         afterColon = false;

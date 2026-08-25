@@ -21,11 +21,24 @@ add_executable(
 target_include_directories(
     main
     PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}
 )
 
 target_link_libraries(
     main
+    PRIVATE
+    Core
+    JsonParser
+)
+
+target_include_directories(
+    src
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}
+)
+
+target_link_libraries(
+    src
     PRIVATE
     Core
     JsonParser
