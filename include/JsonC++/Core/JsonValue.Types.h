@@ -1,16 +1,15 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
 
 namespace Core
 {
 
-union Value {
-};
+class JsonValue;
 
 using Json_Null = std::monostate;
 using Json_Bool = bool;
@@ -32,7 +31,13 @@ using Json_UInt64 = uint64_t;
 using Json_Float = float;
 using Json_Double = double;
 
-using Json_Object = std::map<std::string, Value>;
-using Json_Array = std::vector<Value>;
+using Json_Object_KeyValuePair = std::pair<std::string, JsonValue>;
+
+using Json_Object = std::vector<Json_Object_KeyValuePair>;
+using Json_Array = std::vector<JsonValue>;
+
+using Value = std::variant<Json_Null, Json_Bool, Json_Int8, Json_UInt8, Json_Int16, Json_UInt16, Json_Int32,
+                           Json_UInt32, Json_Int64, Json_UInt64, Json_Float, Json_Double, Json_String,
+                           Json_Object, Json_Array>;
 
 } // namespace Core

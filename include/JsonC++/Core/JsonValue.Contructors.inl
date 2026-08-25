@@ -4,6 +4,7 @@
 #include "JsonValue.Types.h"
 #include "JsonValue.h"
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -16,9 +17,9 @@ inline JsonValue::JsonValue() noexcept
 {
 }
 
-template <JsonValueLike T, typename X>
-JsonValue::JsonValue(T &&value){
-
+template <JsonValueLike T, typename X> JsonValue::JsonValue(T&& value)
+{
+    m_data = std::forward<T>(value);
 };
 
 } // namespace Core

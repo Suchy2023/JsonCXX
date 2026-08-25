@@ -1,37 +1,29 @@
 
 
 #include "JsonC++/Core/JsonValue.h"
-#include "JsonC++/Core/JsonValue.Types.h"
+#include "JsonTypeHelpers.h"
 #include "gtest/gtest.h"
-#include <type_traits>
-#include <variant>
+#include <gtest/gtest.h>
 
-namespace Tests
-{
-
-class Equal_Overload
-    : public ::testing::TestWithParam<Core::JsonVariant>
+template <typename T> class ComparersTest : public ::testing::Test
 {
 };
 
-TEST_P(Equal_Overload, is_comparable_to)
+TYPED_TEST_SUITE(ComparersTest, Tests::Helpers::JsonComparableTo);
+
+TYPED_TEST(ComparersTest, is_comparable_to_constructible_types)
 {
+    const auto value = TypeParam{};
 
-  std::visit(
-      [](auto &&val)
-      {
-        using T = std::remove_cvref_t<decltype(val)>;
+    const auto json = Core::JsonValue{value};
 
-        EXPECT_TRUE(val == val);
-      },
-      GetParam());
-};
+    EXPECT_EQ(json, value);
+}
 
-INSTANTIATE_TEST_SUITE_P(JsonValue_Comparers_Test, Equal_Overload,
-                         ::testing::Values(Core::Json_Null{}, Core::Json_Int64{},
-                                           Core::JsonDouble{},
-                                           Core::Json_String{},
-                                           Core::Json_Object{},
-                                           Core::Json_Array{}));
+TYPED_TEST(ComparersTest, comparision_to_itself_is_truthy)
+{
+    const auto json = Core::JsonValue{TypeParam{}};
 
-} // namespace Tests
+    EXPECT_EQ(json, json);
+
+}

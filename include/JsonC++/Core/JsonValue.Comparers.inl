@@ -5,13 +5,16 @@
 #include "JsonValue.h"
 
 #include "JsonValue.Concepts.h"
+#include <iostream>
+#include <string>
 #include <type_traits>
+#include <typeinfo>
 #include <variant>
 
 namespace Core
 {
 
-template <JsonValueLike T> bool JsonValue::strictlyEquals(T &&json) const
+template <JsonValueLike T> bool JsonValue::strictlyEquals(T&& json) const
 {
     if constexpr (std::is_same_v<std::remove_cvref_t<T>, JsonValue>)
     {
@@ -22,28 +25,22 @@ template <JsonValueLike T> bool JsonValue::strictlyEquals(T &&json) const
     }
 };
 
-template <JsonValueLike T> bool JsonValue::operator==(T &&other) const
+template <JsonValueLike T> bool JsonValue::operator==(T&& other) const
 {
-    using U = std::remove_cvref_t<T>;
-
-    if constexpr (std::is_same_v<U, Core::JsonValue>)
+    if constexpr (std::is_same_v<std::remove_cvref_t<T>, JsonValue>)
     {
         return m_data == other.m_data;
     }
     else
     {
-        return std::visit([&](const auto& held) -> bool {
-            if constexpr (std::is_same_v<std::remove_cvref_t<decltype(held)>, U>)
-            {
-                return held == other;
-            }
-            else
-            {
-                return false;
-            }
-        }, m_data);
-    };
-
-    return false;
+        if (const auto value = std::get_if<std::remove_cvref_t<T>>(&m_data))
+        {
+            return *value == other;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 } // namespace Core

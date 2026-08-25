@@ -4,6 +4,8 @@
 #include "JsonTypeHelpers.h"
 #include "gtest/gtest.h"
 #include <gtest/gtest.h>
+#include <iostream>
+#include <string>
 
 namespace Tests
 {
@@ -18,15 +20,14 @@ TYPED_TEST(JsonValue_Mutators_Test, emplace_works_for_convertible_type)
 {
   auto json = Core::JsonValue{};
 
-  const auto param = TypeParam();
-
   const auto toAdd = TypeParam{};
 
   const auto emplaceResult = json.emplace("key", toAdd);
-
+  
   EXPECT_TRUE(emplaceResult.has_value());
 
   EXPECT_TRUE(json.has("key").has_value());
+  EXPECT_TRUE(json.has("key").value());
 
   EXPECT_EQ(emplaceResult.value().get(), toAdd);
 };

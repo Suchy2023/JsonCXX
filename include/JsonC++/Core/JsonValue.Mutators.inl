@@ -1,47 +1,33 @@
 #pragma once
 
-#include "JsonValue.h"
-#include "JsonValue.Types.h"
-#include "JsonValue.Types.h"
 #include "JsonError.h"
+#include "JsonValue.Types.h"
+#include "JsonValue.h"
 #include <expected>
 #include <functional>
+#include <utility>
 
 namespace Core
 {
-// object mutators
+
 template <Stringlike TKey, ConvertibleToJson TValue>
-std::expected<std::reference_wrapper<JsonValue>, Core::JsonError>
-JsonValue::emplace(TKey &&key, TValue &&value)
+std::expected<std::reference_wrapper<JsonValue>, Core::JsonError> JsonValue::emplace(TKey&& key, TValue&& value)
 {
-  if (!isObject())
-  {
+    if (!isObject())
+    {
+        m_data = Json_Object{};
+    }
+
+    auto& object = std::get<Json_Object>(m_data);
+
+    auto& emplaced = object.emplace_back(Json_Object_KeyValuePair{std::forward<TKey>(key), std::forward<TValue>(value)});    
     
-  }
+    return emplaced.second;
+}
 
-  Json_Object obj;
-  const auto x = obj.emplace("k", "");
+template <Stringlike TKey, ConvertibleToJson TValue>
+std::expected<std::reference_wrapper<JsonValue>, Core::JsonError> JsonValue::emplaceBack(TKey&& key, TValue&& value)
+{
+}
 
-  const auto y = x.first;
-
-  const auto z = y->second;
-
-  return asObject().and_then(
-      [key = std::forward<TKey>(key),
-       value = std::forward<TValue>(value)](Json_Object &object)
-          -> std::expected<std::reference_wrapper<JsonValue>, JsonError>
-      {
-        const auto resultPair = object.emplace(std::move(key), std::move(value));
-
-        if (!resultPair.second)
-        {
-            return std::unexpected(JsonError::could_not_emplace);
-        }
-
-        return resultPair.first->second;
-      });
-};
-
-// array muttators
-
-} // namespace Core
+} // namespace Core  

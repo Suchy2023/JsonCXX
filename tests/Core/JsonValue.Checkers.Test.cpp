@@ -25,7 +25,9 @@ TYPED_TEST(JsonValue_Checkers_Test, is_returns_true_for_own_type) {
 
 TEST(JsonValue_Checkers_Test, has_returns_true_when_key_exists) {
 
-  Core::JsonValue json{Core::Json_Object{{"key", 1}}};
+  Core::JsonValue json{};
+
+  json.emplace("key", 1);
 
   EXPECT_TRUE(json.has("key"));
 }
