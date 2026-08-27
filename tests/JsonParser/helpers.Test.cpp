@@ -1,7 +1,10 @@
- 
+
 
 #include "helpers.h"
 #include "gtest/gtest.h"
+
+namespace Tests
+{
 
 TEST(JsonParser_Helpers_Test, is_digit)
 {
@@ -79,3 +82,15 @@ TEST(JsonParser_Helpers_Test, is_whitespace)
 
     EXPECT_FALSE(JsonParser::Helpers::isWhitespace("p"));
 }
+
+TEST(HelpersTest, IsJsonNumberValidCharacter)
+{
+
+}
+
+TEST(HelpersTest, IsJsonNumberInvalidCharacter)
+{
+
+}
+
+} // namespace Tests

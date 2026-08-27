@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "JsonC++/Core/JsonValue.Types.h"
 #include "JsonC++/Core/JsonValue.h"
 #include "JsonParser.Concepts.h"
 #include "JsonParserError.h"
@@ -9,6 +10,7 @@
 #include <expected>
 #include <string>
 #include <string_view>
+#include <variant>
 
 namespace JsonParser
 {
@@ -22,7 +24,7 @@ class JsonParser
   public:
     static std::expected<Core::JsonValue, JsonParserError> parse(std::string_view value);
 
-    static std::expected<Core::JsonValue, JsonParserError> parseNumber(Iterator iterator, End end);
+    static std::expected<std::variant<Core::Json_Int64, Core::Json_UInt64, Core::Json_Double>, JsonParserError> parseNumber(Iterator iterator, End end);
 
     static std::string parseString(Iterator iterator, End end);
 
