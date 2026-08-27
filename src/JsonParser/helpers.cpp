@@ -4,7 +4,7 @@
 #include <cctype>
 namespace JsonParser::Helpers
 {
-using T = const char *const &;
+using T = const char* const&;
 
 bool isDigit(T iterator)
 {
@@ -54,5 +54,25 @@ bool isWhitespace(T iterator)
 bool isMinusSign(T iterator)
 {
     return *iterator == 45;
+}
+
+bool isPlusSign(T iterator)
+{
+    return *iterator == '+';
+}
+
+bool isExponentSign(T iterator)
+{
+    return (*iterator == 'e' || *iterator == 'E');
+}
+
+bool isJsonNumberValidCharacter(T iterator)
+{
+    return (isDigit(iterator) || isDot(iterator) || isMinusSign(iterator) || isExponentSign(iterator));
+}
+
+bool isJsonNumberInvalidCharacter(T iterator)
+{
+    return !isJsonNumberValidCharacter(iterator);
 }
 } // namespace JsonParser::Helpers
