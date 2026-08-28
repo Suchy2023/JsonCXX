@@ -2,8 +2,9 @@
 
 add_project_test(
     JsonParser_Tests
-    helpers.Test.cpp
+    char.helpers.Test.cpp
     JsonParser.parseNumber.Test.cpp
+    parseString.helpers.Test.cpp
 )
 
 target_include_directories(
