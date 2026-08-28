@@ -3,13 +3,14 @@
 #include "JsonC++/JsonParser/JsonParser.h"
 #include "JsonC++/Core/JsonValue.Types.h"
 #include "JsonC++/JsonParser/JsonParserError.h"
-#include "helpers.h"
 #include <charconv>
 #include <cstdint>
 #include <limits>
 #include <system_error>
 #include <utility>
 #include <variant>
+#include "char.helpers.h"
+#include "parseNumber.helpers.h"
 
 namespace JsonParser
 {
