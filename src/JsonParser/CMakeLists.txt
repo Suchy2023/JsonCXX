@@ -2,14 +2,11 @@
 
 add_library(
     JsonParser
-    helpers.cpp
-    JsonParser.getValue.cpp
-    JsonParser.parse.cpp
-    JsonParser.parseArray.cpp
-    JsonParser.parseObject.cpp
     JsonParser.parseString.cpp
-    JsonParser.iterate.cpp
     JsonParser.parseNumber.cpp
+    parseString.helpers.cpp
+    parseNumber.helpers.cpp
+    char.helpers.cpp
 )
 
 target_include_directories(
